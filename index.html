@@ -1,148 +1,803 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cisco Python · Caso de Estudio · Eilyn Ginoe</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,600&family=Inter:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,600&family=Inter:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap"
+    rel="stylesheet" />
   <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-49R4YX2PCR"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-49R4YX2PCR"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
 
-  gtag('config', 'G-49R4YX2PCR');
-</script>
+    gtag('config', 'G-49R4YX2PCR');
+  </script>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body { font-family: 'Inter', sans-serif; background: #F5F6F2; color: #111814; -webkit-font-smoothing: antialiased; }
-    :root {
-      --ink: #080F0A; --bg: #F5F6F2; --bg-sage: #EAF0E6; --bg-dark: #0D1E10;
-      --bg-gold: #F8F4E8; --selva: #1A5C35; --selva-lt: #C0E8D0; --selva-mid: #A8D0B4;
-      --selva-dim: #4A6850; --gold: #9A7010; --gold-lt: #C9A84C;
-      --border: #C8D8C0; --border-dk: #1E3820; --muted: #5A6858; --hint: #7A9870;
-      --max: 1100px; --pad: clamp(24px, 5vw, 80px);
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
-    .wrap { max-width: var(--max); margin: 0 auto; padding-left: var(--pad); padding-right: var(--pad); }
 
-    .nav { position: sticky; top: 0; z-index: 100; background: rgba(245,246,242,0.94); backdrop-filter: blur(12px); border-bottom: 0.5px solid var(--border); height: 72px; }
-    .nav .wrap { height: 100%; display: flex; align-items: center; justify-content: space-between; }
-    .nav-back { display: flex; align-items: center; gap: 8px; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--hint); text-decoration: none; transition: color 0.2s; }
-    .nav-back:hover { color: var(--selva); }
-    .nav-logo { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 600; font-size: 20px; color: var(--ink); text-decoration: none; }
-    .nav-logo span { color: var(--gold); }
-    .nav-tag { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--hint); }
+    html {
+      scroll-behavior: smooth;
+    }
 
-    .case-hero { background: #1A2E18; padding: 64px 0 56px; }
-    .case-hero .wrap { display: grid; grid-template-columns: 1fr auto; gap: 48px; align-items: start; }
-    .ch-tag { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 2.5px; text-transform: uppercase; color: #3A6A48; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
-    .ch-tag::before { content: ''; width: 16px; height: 0.5px; background: #4A8A58; display: block; }
-    .ch-title { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 600; font-size: clamp(40px, 5vw, 52px); line-height: 1.0; color: #F5F6F2; margin-bottom: 16px; }
-    .ch-title span { color: var(--gold); }
-    .ch-sub { font-size: 16px; font-weight: 300; line-height: 1.8; color: #E4E1DA; max-width: 520px; }
-    .ch-sub strong { color: var(--selva-mid); font-weight: 500; }
-    .ch-meta { display: flex; flex-direction: column; gap: 10px; min-width: 200px; }
-    .meta-item { padding: 14px 18px; border-radius: 10px; background: rgba(255,255,255,0.04); border: 0.5px solid #2A4A2A; }
-    .meta-label { font-family: 'Space Mono', monospace; font-size: 8px; letter-spacing: 2px; text-transform: uppercase; color: #3A6A48; margin-bottom: 4px; }
-    .meta-value { font-size: 12px; color: var(--selva-mid); font-weight: 500; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #F5F6F2;
+      color: #111814;
+      -webkit-font-smoothing: antialiased;
+    }
 
-    .pmv-note { margin-top: 32px; padding: 18px 22px; border-radius: 12px; background: rgba(26,92,53,0.06); border: 1px dashed rgba(26,92,53,0.3); display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: start; max-width: 680px; }
-    .pmv-badge { font-family: 'Space Mono', monospace; font-size: 8px; letter-spacing: 2px; text-transform: uppercase; background: rgba(26,92,53,0.15); color: #7ABD90; border: 0.5px solid rgba(26,92,53,0.3); border-radius: 20px; padding: 4px 12px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
-    .pmv-title { font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; color: #7ABD90; letter-spacing: 0.5px; margin-bottom: 6px; }
-    .pmv-rows { display: flex; flex-direction: column; gap: 5px; }
-    .pmv-row { display: flex; gap: 8px; align-items: baseline; }
-    .pmv-row-label { font-family: 'Space Mono', monospace; font-size: 8px; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(201,168,76,0.6); flex-shrink: 0; min-width: 80px; }
-    .pmv-row-text { font-size: 11px; color: #B8BBB2; line-height: 1.5; }
+    :root {
+      --ink: #080F0A;
+      --bg: #F5F6F2;
+      --bg-sage: #EAF0E6;
+      --bg-dark: #0D1E10;
+      --bg-gold: #F8F4E8;
+      --selva: #1A5C35;
+      --selva-lt: #C0E8D0;
+      --selva-mid: #A8D0B4;
+      --selva-dim: #4A6850;
+      --gold: #9A7010;
+      --gold-lt: #C9A84C;
+      --border: #C8D8C0;
+      --border-dk: #1E3820;
+      --muted: #5A6858;
+      --hint: #7A9870;
+      --max: 1100px;
+      --pad: clamp(24px, 5vw, 80px);
+    }
 
-    .acto-pill { display: inline-flex; align-items: center; gap: 8px; padding: 7px 18px; border-radius: 30px; font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; margin: 48px 0 0; }
-    .ap1 { background: var(--bg-sage); color: var(--selva); border: 0.5px solid var(--border); }
-    .ap2 { background: var(--bg-gold); color: var(--gold); border: 0.5px solid rgba(154,112,16,0.3); }
+    .wrap {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding-left: var(--pad);
+      padding-right: var(--pad);
+    }
 
-    .section { padding: 48px 0; border-top: 0.5px solid var(--border); }
-    .eyebrow { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
-    .eyebrow-line { width: 24px; height: 0.5px; background: var(--selva); flex-shrink: 0; }
-    .eyebrow-text { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--hint); }
-    .s-title { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 600; font-size: 34px; color: var(--ink); line-height: 1.1; margin-bottom: 14px; }
-    .s-body { font-size: 16px; font-weight: 300; line-height: 1.85; color: #4A5A48; }
-    .s-body strong { font-weight: 600; color: var(--ink); }
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(245, 246, 242, 0.94);
+      backdrop-filter: blur(12px);
+      border-bottom: 0.5px solid var(--border);
+      height: 72px;
+    }
 
-    .lentes { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 20px; }
-    .lente { border-radius: 12px; padding: 18px 20px; background: var(--bg); border: 0.5px solid var(--border); }
-    .l-num { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--hint); margin-bottom: 8px; }
-    .l-name { font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: 18px; color: var(--ink); margin-bottom: 3px; }
-    .l-author { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--gold); margin-bottom: 8px; }
-    .l-use { font-size: 11px; line-height: 1.6; color: var(--muted); }
+    .nav .wrap {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
 
-    .frictions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
-    .friction { border-radius: 12px; padding: 18px 20px; }
-    .f-absent { background: #FDF0F0; border: 0.5px solid #F0C8C8; }
-    .f-inverted { background: #FFF4E8; border: 0.5px solid #F0D8A8; }
-    .f-partial { background: var(--bg-gold); border: 0.5px solid rgba(154,112,16,0.2); }
-    .f-label { font-family: 'Space Mono', monospace; font-size: 8px; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
-    .fl-a { color: #C04040; } .fl-i { color: #B06010; } .fl-p { color: #8A6010; }
-    .f-dim { font-size: 12px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
-    .f-text { font-size: 11px; line-height: 1.6; color: #5A5A58; }
-    .f-evidence { font-family: 'Space Mono', monospace; font-size: 9px; color: #8A8A80; margin-top: 6px; font-style: italic; }
+    .nav-back {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--hint);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
 
-    .transition-band { background: var(--bg-dark); padding: 40px 0; }
-    .tr-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
-    .tr-tag { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: #2A5A30; margin-bottom: 12px; }
-    .tr-title { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 600; font-size: 26px; color: #F5F6F2; line-height: 1.2; margin-bottom: 12px; }
-    .tr-body { font-size: 13px; line-height: 1.75; color: var(--selva-dim); }
-    .tr-body strong { color: var(--selva-mid); font-weight: 500; }
-    .tr-findings { display: flex; flex-direction: column; gap: 10px; }
-    .trf { padding: 14px 16px; border-radius: 10px; background: rgba(255,255,255,0.04); border: 0.5px solid var(--border-dk); }
-    .trf-label { font-family: 'Space Mono', monospace; font-size: 8px; letter-spacing: 1.5px; text-transform: uppercase; color: #3A6A48; margin-bottom: 4px; }
-    .trf-text { font-size: 12px; color: #7ABD90; line-height: 1.5; }
+    .nav-back:hover {
+      color: var(--selva);
+    }
 
-    .modules { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
-    .module { border-radius: 12px; padding: 18px 20px; background: var(--bg); border: 0.5px solid var(--border); }
-    .mod-num { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--hint); margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between; }
-    .mod-bloom { font-family: 'Space Mono', monospace; font-size: 8px; padding: 2px 8px; border-radius: 10px; background: var(--bg-sage); color: #2A5A30; }
-    .mod-name { font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: 17px; color: var(--ink); margin-bottom: 4px; line-height: 1.2; }
-    .mod-q { font-size: 12px; font-style: italic; color: var(--hint); margin-bottom: 6px; }
-    .mod-text { font-size: 12px; line-height: 1.6; color: var(--muted); }
-    .mod-wow { margin-top: 8px; padding: 6px 10px; border-radius: 6px; background: var(--bg-sage); font-size: 10px; color: #2A5A30; font-weight: 500; }
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-weight: 600;
+      font-size: 20px;
+      color: var(--ink);
+      text-decoration: none;
+    }
 
-    .decisions { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
-    .decision { display: grid; grid-template-columns: 1fr 28px 1fr; gap: 10px; align-items: center; }
-    .dec-no { padding: 10px 14px; border-radius: 8px; background: rgba(0,0,0,0.04); border: 0.5px solid rgba(0,0,0,0.08); font-size: 11px; color: #888; text-decoration: line-through; text-decoration-color: rgba(0,0,0,0.2); }
-    .dec-arr { text-align: center; color: var(--border); font-size: 14px; }
-    .dec-yes { padding: 10px 14px; border-radius: 8px; background: var(--bg-sage); border: 0.5px solid var(--border); font-size: 11px; color: #2A4A2A; font-weight: 500; }
-    .dec-reason { grid-column: 3; padding: 0 14px 10px; font-size: 10px; color: var(--hint); line-height: 1.5; border-bottom: 0.5px solid #E0E8DC; }
-    .decision:last-child .dec-reason { border-bottom: none; }
+    .nav-logo span {
+      color: var(--gold);
+    }
 
-    .quote-band { background: var(--gold); padding: 48px 0; }
-    .quote-band .wrap { text-align: center; max-width: 800px; }
-    .quote-text { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: 28px; color: #F5F0E0; line-height: 1.4; margin-bottom: 14px; }
-    .quote-text span { color: #F0D080; }
-    .quote-attr { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: #C8A850; }
+    .nav-tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--hint);
+    }
 
-    .next-band { background: var(--bg); border-top: 0.5px solid var(--border); padding: 40px 0; }
-    .next-band .wrap { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
-    .next-label { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--hint); margin-bottom: 6px; }
-    .next-title { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 600; font-size: 24px; color: var(--ink); }
-    .next-btn { display: flex; align-items: center; gap: 10px; background: var(--selva); color: var(--selva-lt); border: none; border-radius: 40px; padding: 12px 28px; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; text-decoration: none; white-space: nowrap; }
+    .case-hero {
+      background: #1A2E18;
+      padding: 64px 0 56px;
+    }
 
-    footer { background: var(--ink); padding: 24px 0; }
-    footer .wrap { display: flex; align-items: center; justify-content: space-between; }
-    .footer-logo { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 600; font-size: 18px; color: #F5F6F2; text-decoration: none; }
-    .footer-logo span { color: var(--gold); }
-    .footer-copy { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: #B8BBB2; }
+    .case-hero .wrap {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 48px;
+      align-items: start;
+    }
+
+    .ch-tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: #3A6A48;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .ch-tag::before {
+      content: '';
+      width: 16px;
+      height: 0.5px;
+      background: #4A8A58;
+      display: block;
+    }
+
+    .ch-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-weight: 600;
+      font-size: clamp(40px, 5vw, 52px);
+      line-height: 1.0;
+      color: #F5F6F2;
+      margin-bottom: 16px;
+    }
+
+    .ch-title span {
+      color: var(--gold);
+    }
+
+    .ch-sub {
+      font-size: 16px;
+      font-weight: 300;
+      line-height: 1.8;
+      color: #E4E1DA;
+      max-width: 520px;
+    }
+
+    .ch-sub strong {
+      color: var(--selva-mid);
+      font-weight: 500;
+    }
+
+    .ch-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-width: 200px;
+    }
+
+    .meta-item {
+      padding: 14px 18px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 0.5px solid #2A4A2A;
+    }
+
+    .meta-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 8px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #3A6A48;
+      margin-bottom: 4px;
+    }
+
+    .meta-value {
+      font-size: 12px;
+      color: var(--selva-mid);
+      font-weight: 500;
+    }
+
+    .pmv-note {
+      margin-top: 32px;
+      padding: 18px 22px;
+      border-radius: 12px;
+      background: rgba(26, 92, 53, 0.06);
+      border: 1px dashed rgba(26, 92, 53, 0.3);
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 16px;
+      align-items: start;
+      max-width: 680px;
+    }
+
+    .pmv-badge {
+      font-family: 'Space Mono', monospace;
+      font-size: 8px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      background: rgba(26, 92, 53, 0.15);
+      color: #7ABD90;
+      border: 0.5px solid rgba(26, 92, 53, 0.3);
+      border-radius: 20px;
+      padding: 4px 12px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .pmv-title {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      color: #7ABD90;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .pmv-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .pmv-row {
+      display: flex;
+      gap: 8px;
+      align-items: baseline;
+    }
+
+    .pmv-row-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 8px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(201, 168, 76, 0.6);
+      flex-shrink: 0;
+      min-width: 80px;
+    }
+
+    .pmv-row-text {
+      font-size: 11px;
+      color: #B8BBB2;
+      line-height: 1.5;
+    }
+
+    .acto-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 18px;
+      border-radius: 30px;
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin: 48px 0 0;
+    }
+
+    .ap1 {
+      background: var(--bg-sage);
+      color: var(--selva);
+      border: 0.5px solid var(--border);
+    }
+
+    .ap2 {
+      background: var(--bg-gold);
+      color: var(--gold);
+      border: 0.5px solid rgba(154, 112, 16, 0.3);
+    }
+
+    .section {
+      padding: 48px 0;
+      border-top: 0.5px solid var(--border);
+    }
+
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .eyebrow-line {
+      width: 24px;
+      height: 0.5px;
+      background: var(--selva);
+      flex-shrink: 0;
+    }
+
+    .eyebrow-text {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--hint);
+    }
+
+    .s-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-weight: 600;
+      font-size: 34px;
+      color: var(--ink);
+      line-height: 1.1;
+      margin-bottom: 14px;
+    }
+
+    .s-body {
+      font-size: 16px;
+      font-weight: 300;
+      line-height: 1.85;
+      color: #4A5A48;
+    }
+
+    .s-body strong {
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .lentes {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .lente {
+      border-radius: 12px;
+      padding: 18px 20px;
+      background: var(--bg);
+      border: 0.5px solid var(--border);
+    }
+
+    .l-num {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      color: var(--hint);
+      margin-bottom: 8px;
+    }
+
+    .l-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 600;
+      font-size: 18px;
+      color: var(--ink);
+      margin-bottom: 3px;
+    }
+
+    .l-author {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+
+    .l-use {
+      font-size: 11px;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+
+    .frictions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .friction {
+      border-radius: 12px;
+      padding: 18px 20px;
+    }
+
+    .f-absent {
+      background: #FDF0F0;
+      border: 0.5px solid #F0C8C8;
+    }
+
+    .f-inverted {
+      background: #FFF4E8;
+      border: 0.5px solid #F0D8A8;
+    }
+
+    .f-partial {
+      background: var(--bg-gold);
+      border: 0.5px solid rgba(154, 112, 16, 0.2);
+    }
+
+    .f-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 8px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .fl-a {
+      color: #C04040;
+    }
+
+    .fl-i {
+      color: #B06010;
+    }
+
+    .fl-p {
+      color: #8A6010;
+    }
+
+    .f-dim {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+
+    .f-text {
+      font-size: 11px;
+      line-height: 1.6;
+      color: #5A5A58;
+    }
+
+    .f-evidence {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      color: #8A8A80;
+      margin-top: 6px;
+      font-style: italic;
+    }
+
+    .transition-band {
+      background: var(--bg-dark);
+      padding: 40px 0;
+    }
+
+    .tr-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .tr-tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #2A5A30;
+      margin-bottom: 12px;
+    }
+
+    .tr-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-weight: 600;
+      font-size: 26px;
+      color: #F5F6F2;
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+
+    .tr-body {
+      font-size: 13px;
+      line-height: 1.75;
+      color: var(--selva-dim);
+    }
+
+    .tr-body strong {
+      color: var(--selva-mid);
+      font-weight: 500;
+    }
+
+    .tr-findings {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .trf {
+      padding: 14px 16px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 0.5px solid var(--border-dk);
+    }
+
+    .trf-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 8px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #3A6A48;
+      margin-bottom: 4px;
+    }
+
+    .trf-text {
+      font-size: 12px;
+      color: #7ABD90;
+      line-height: 1.5;
+    }
+
+    .modules {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .module {
+      border-radius: 12px;
+      padding: 18px 20px;
+      background: var(--bg);
+      border: 0.5px solid var(--border);
+    }
+
+    .mod-num {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      color: var(--hint);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .mod-bloom {
+      font-family: 'Space Mono', monospace;
+      font-size: 8px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      background: var(--bg-sage);
+      color: #2A5A30;
+    }
+
+    .mod-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 600;
+      font-size: 17px;
+      color: var(--ink);
+      margin-bottom: 4px;
+      line-height: 1.2;
+    }
+
+    .mod-q {
+      font-size: 12px;
+      font-style: italic;
+      color: var(--hint);
+      margin-bottom: 6px;
+    }
+
+    .mod-text {
+      font-size: 12px;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+
+    .mod-wow {
+      margin-top: 8px;
+      padding: 6px 10px;
+      border-radius: 6px;
+      background: var(--bg-sage);
+      font-size: 10px;
+      color: #2A5A30;
+      font-weight: 500;
+    }
+
+    .decisions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .decision {
+      display: grid;
+      grid-template-columns: 1fr 28px 1fr;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .dec-no {
+      padding: 10px 14px;
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.04);
+      border: 0.5px solid rgba(0, 0, 0, 0.08);
+      font-size: 11px;
+      color: #888;
+      text-decoration: line-through;
+      text-decoration-color: rgba(0, 0, 0, 0.2);
+    }
+
+    .dec-arr {
+      text-align: center;
+      color: var(--border);
+      font-size: 14px;
+    }
+
+    .dec-yes {
+      padding: 10px 14px;
+      border-radius: 8px;
+      background: var(--bg-sage);
+      border: 0.5px solid var(--border);
+      font-size: 11px;
+      color: #2A4A2A;
+      font-weight: 500;
+    }
+
+    .dec-reason {
+      grid-column: 3;
+      padding: 0 14px 10px;
+      font-size: 10px;
+      color: var(--hint);
+      line-height: 1.5;
+      border-bottom: 0.5px solid #E0E8DC;
+    }
+
+    .decision:last-child .dec-reason {
+      border-bottom: none;
+    }
+
+    .quote-band {
+      background: var(--gold);
+      padding: 48px 0;
+    }
+
+    .quote-band .wrap {
+      text-align: center;
+      max-width: 800px;
+    }
+
+    .quote-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-weight: 300;
+      font-size: 28px;
+      color: #F5F0E0;
+      line-height: 1.4;
+      margin-bottom: 14px;
+    }
+
+    .quote-text span {
+      color: #F0D080;
+    }
+
+    .quote-attr {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #C8A850;
+    }
+
+    .next-band {
+      background: var(--bg);
+      border-top: 0.5px solid var(--border);
+      padding: 40px 0;
+    }
+
+    .next-band .wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .next-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--hint);
+      margin-bottom: 6px;
+    }
+
+    .next-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-weight: 600;
+      font-size: 24px;
+      color: var(--ink);
+    }
+
+    .next-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--selva);
+      color: var(--selva-lt);
+      border: none;
+      border-radius: 40px;
+      padding: 12px 28px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    footer {
+      background: var(--ink);
+      padding: 24px 0;
+    }
+
+    footer .wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-weight: 600;
+      font-size: 18px;
+      color: #F5F6F2;
+      text-decoration: none;
+    }
+
+    .footer-logo span {
+      color: var(--gold);
+    }
+
+    .footer-copy {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #B8BBB2;
+    }
 
     @media (max-width: 800px) {
-      .case-hero .wrap { grid-template-columns: 1fr; } .ch-meta { display: none; }
-      .lentes, .frictions, .modules { grid-template-columns: 1fr; }
-      .tr-inner { grid-template-columns: 1fr; }
-      .decision { grid-template-columns: 1fr; } .dec-arr { display: none; } .dec-reason { grid-column: 1; }
-      .next-band .wrap { flex-direction: column; align-items: flex-start; }
+      .case-hero .wrap {
+        grid-template-columns: 1fr;
+      }
+
+      .ch-meta {
+        display: none;
+      }
+
+      .lentes,
+      .frictions,
+      .modules {
+        grid-template-columns: 1fr;
+      }
+
+      .tr-inner {
+        grid-template-columns: 1fr;
+      }
+
+      .decision {
+        grid-template-columns: 1fr;
+      }
+
+      .dec-arr {
+        display: none;
+      }
+
+      .dec-reason {
+        grid-column: 1;
+      }
+
+      .next-band .wrap {
+        flex-direction: column;
+        align-items: flex-start;
+      }
     }
   </style>
 </head>
+
 <body>
 
   <nav class="nav">
@@ -158,7 +813,9 @@
       <div>
         <div class="ch-tag">caso de estudio · auditoría + rediseño</div>
         <div class="ch-title">Cisco Python<br><span>en dos actos.</span></div>
-        <p class="ch-sub">Primero diagnostiqué por qué el curso fallaba. Luego diseñé la solución que resolvía exactamente lo que encontré. <strong>Este caso demuestra que saber diagnosticar es tan valioso como saber diseñar.</strong></p>
+        <p class="ch-sub">Primero diagnostiqué por qué el curso fallaba. Luego diseñé la solución que resolvía
+          exactamente lo que encontré. <strong>Este caso demuestra que saber diagnosticar es tan valioso como saber
+            diseñar.</strong></p>
 
         <div class="pmv-note">
           <span class="pmv-badge">documento de diseño</span>
@@ -167,25 +824,40 @@
             <div class="pmv-rows">
               <div class="pmv-row">
                 <span class="pmv-row-label">acto 01</span>
-                <span class="pmv-row-text">Auditoría instruccional completa del curso original con marco teórico, 5 dimensiones de análisis y hallazgos documentados.</span>
+                <span class="pmv-row-text">Auditoría instruccional completa del curso original con marco teórico, 5
+                  dimensiones de análisis y hallazgos documentados.</span>
               </div>
               <div class="pmv-row">
                 <span class="pmv-row-label">acto 02</span>
-                <span class="pmv-row-text">DDI completo de la Ruta Curiosidad — perfil del estudiante, objetivos, estructura de módulos, estrategia de evaluación y decisiones de diseño.</span>
+                <span class="pmv-row-text">DDI completo de la Ruta Curiosidad — perfil del estudiante, objetivos,
+                  estructura de módulos, estrategia de evaluación y decisiones de diseño.</span>
               </div>
               <div class="pmv-row">
                 <span class="pmv-row-label">estado</span>
-                <span class="pmv-row-text">Diseño instruccional documentado. Desarrollo del prototipo funcional es el siguiente paso.</span>
+                <span class="pmv-row-text">Diseño instruccional documentado. Desarrollo del prototipo funcional es el
+                  siguiente paso.</span>
               </div>
             </div>
           </div>
         </div>
       </div>
       <div class="ch-meta">
-        <div class="meta-item"><div class="meta-label">acto 01</div><div class="meta-value">Auditoría instruccional</div></div>
-        <div class="meta-item"><div class="meta-label">acto 02</div><div class="meta-value">Ruta Curiosidad</div></div>
-        <div class="meta-item"><div class="meta-label">audiencia</div><div class="meta-value">Profesionales no-tech</div></div>
-        <div class="meta-item"><div class="meta-label">curso auditado</div><div class="meta-value">Cisco Python 1 (~2M)</div></div>
+        <div class="meta-item">
+          <div class="meta-label">acto 01</div>
+          <div class="meta-value">Auditoría instruccional</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">acto 02</div>
+          <div class="meta-value">Ruta Curiosidad</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">audiencia</div>
+          <div class="meta-value">Profesionales no-tech</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">curso auditado</div>
+          <div class="meta-value">Cisco Python 1 (~2M)</div>
+        </div>
       </div>
     </div>
   </section>
@@ -198,29 +870,79 @@
       </div>
 
       <div class="section">
-        <div class="eyebrow"><div class="eyebrow-line"></div><span class="eyebrow-text">pregunta 01 · conducta</span></div>
+        <div class="eyebrow">
+          <div class="eyebrow-line"></div><span class="eyebrow-text">pregunta 01 · conducta</span>
+        </div>
         <div class="s-title">¿Qué necesita hacer diferente este estudiante?</div>
-        <p class="s-body">Cisco Python 1 tiene casi 2 millones de estudiantes. Y un problema silencioso: <strong>los estudiantes completan el curso sin saber si Python tiene algo que ver con ellos.</strong> La conducta que necesitaba cambiar no era técnica — era de pertenencia.</p>
+        <p class="s-body">Cisco Python 1 tiene casi 2 millones de estudiantes. Y un problema silencioso: <strong>los
+            estudiantes completan el curso sin saber si Python tiene algo que ver con ellos.</strong> La conducta que
+          necesitaba cambiar no era técnica — era de pertenencia.</p>
       </div>
 
       <div class="section">
-        <div class="eyebrow"><div class="eyebrow-line"></div><span class="eyebrow-text">tres lentes de observación</span></div>
+        <div class="eyebrow">
+          <div class="eyebrow-line"></div><span class="eyebrow-text">tres lentes de observación</span>
+        </div>
         <div class="s-title">El marco teórico que guió la auditoría</div>
         <div class="lentes">
-          <div class="lente"><div class="l-num">01</div><div class="l-name">Carga cognitiva</div><div class="l-author">Sweller, 1988</div><p class="l-use">¿El diseño impone carga innecesaria que distrae del aprendizaje real? Busqué carga extrínseca — la que viene del diseño, no del contenido.</p></div>
-          <div class="lente"><div class="l-num">02</div><div class="l-name">Motivación intrínseca</div><div class="l-author">Deci & Ryan, 1985</div><p class="l-use">¿El curso activa autonomía, competencia y conexión — o los destruye? Sin conexión, el cerebro no justifica el esfuerzo atencional.</p></div>
-          <div class="lente"><div class="l-num">03</div><div class="l-name">Transfer-appropriate processing</div><div class="l-author">Morris, Bransford & Franks, 1977</div><p class="l-use">¿La forma en que se practica se parece a cómo se usa en el trabajo real? A mayor brecha, menor transferencia.</p></div>
+          <div class="lente">
+            <div class="l-num">01</div>
+            <div class="l-name">Carga cognitiva</div>
+            <div class="l-author">Sweller, 1988</div>
+            <p class="l-use">¿El diseño impone carga innecesaria que distrae del aprendizaje real? Busqué carga
+              extrínseca — la que viene del diseño, no del contenido.</p>
+          </div>
+          <div class="lente">
+            <div class="l-num">02</div>
+            <div class="l-name">Motivación intrínseca</div>
+            <div class="l-author">Deci & Ryan, 1985</div>
+            <p class="l-use">¿El curso activa autonomía, competencia y conexión — o los destruye? Sin conexión, el
+              cerebro no justifica el esfuerzo atencional.</p>
+          </div>
+          <div class="lente">
+            <div class="l-num">03</div>
+            <div class="l-name">Transfer-appropriate processing</div>
+            <div class="l-author">Morris, Bransford & Franks, 1977</div>
+            <p class="l-use">¿La forma en que se practica se parece a cómo se usa en el trabajo real? A mayor brecha,
+              menor transferencia.</p>
+          </div>
         </div>
       </div>
 
       <div class="section">
-        <div class="eyebrow"><div class="eyebrow-line"></div><span class="eyebrow-text">hallazgos · cinco dimensiones</span></div>
+        <div class="eyebrow">
+          <div class="eyebrow-line"></div><span class="eyebrow-text">hallazgos · cinco dimensiones</span>
+        </div>
         <div class="s-title">Lo que encontré — y lo que lo causaba</div>
         <div class="frictions">
-          <div class="friction f-absent"><div class="f-label fl-a">ausente</div><div class="f-dim">Relevancia personal</div><p class="f-text">El curso inicia directamente con la definición de programación. No existe ningún mecanismo de conexión personal.</p><div class="f-evidence">Sin motivación intrínseca → el cerebro no justifica el esfuerzo.</div></div>
-          <div class="friction f-inverted"><div class="f-label fl-i">invertida</div><div class="f-dim">Secuencia pedagógica</div><p class="f-text">El patrón dominante es definición → explicación → ejercicio. El estudiante nunca experimenta por qué necesita el concepto.</p><div class="f-evidence">Orden antinatural → carga cognitiva sin anclaje previo.</div></div>
-          <div class="friction f-absent"><div class="f-label fl-a">ausente</div><div class="f-dim">Transferencia real</div><p class="f-text">Los ejercicios usan variables genéricas. Nadie usa "nombre = Juan, edad = 20" en ningún trabajo profesional real.</p><div class="f-evidence">Sin contexto profesional → el conocimiento no sabe dónde vivir.</div></div>
-          <div class="friction f-partial"><div class="f-label fl-p">parcial</div><div class="f-dim">Activación inicial</div><p class="f-text">El primer ejercicio práctico ocurre después de teoría extensa. Sin significado contextual para el estudiante.</p><div class="f-evidence">Activación tardía → la motivación se pierde antes del primer logro.</div></div>
+          <div class="friction f-absent">
+            <div class="f-label fl-a">ausente</div>
+            <div class="f-dim">Relevancia personal</div>
+            <p class="f-text">El curso inicia directamente con la definición de programación. No existe ningún mecanismo
+              de conexión personal.</p>
+            <div class="f-evidence">Sin motivación intrínseca → el cerebro no justifica el esfuerzo.</div>
+          </div>
+          <div class="friction f-inverted">
+            <div class="f-label fl-i">invertida</div>
+            <div class="f-dim">Secuencia pedagógica</div>
+            <p class="f-text">El patrón dominante es definición → explicación → ejercicio. El estudiante nunca
+              experimenta por qué necesita el concepto.</p>
+            <div class="f-evidence">Orden antinatural → carga cognitiva sin anclaje previo.</div>
+          </div>
+          <div class="friction f-absent">
+            <div class="f-label fl-a">ausente</div>
+            <div class="f-dim">Transferencia real</div>
+            <p class="f-text">Los ejercicios usan variables genéricas. Nadie usa "nombre = Juan, edad = 20" en ningún
+              trabajo profesional real.</p>
+            <div class="f-evidence">Sin contexto profesional → el conocimiento no sabe dónde vivir.</div>
+          </div>
+          <div class="friction f-partial">
+            <div class="f-label fl-p">parcial</div>
+            <div class="f-dim">Activación inicial</div>
+            <p class="f-text">El primer ejercicio práctico ocurre después de teoría extensa. Sin significado contextual
+              para el estudiante.</p>
+            <div class="f-evidence">Activación tardía → la motivación se pierde antes del primer logro.</div>
+          </div>
         </div>
       </div>
 
@@ -232,12 +954,22 @@
       <div class="tr-inner">
         <div>
           <div class="tr-tag">la bisagra</div>
-          <div class="tr-title">La auditoría no busca culpables. Busca el punto exacto donde el diseño dejó de servir al estudiante.</div>
-          <p class="tr-body">Con los hallazgos claros, la pregunta cambió: <strong>¿qué tipo de intervención resuelve exactamente estas fricciones sin modificar el contenido técnico del curso?</strong></p>
+          <div class="tr-title">La auditoría no busca culpables. Busca el punto exacto donde el diseño dejó de servir al
+            estudiante.</div>
+          <p class="tr-body">Con los hallazgos claros, la pregunta cambió: <strong>¿qué tipo de intervención resuelve
+              exactamente estas fricciones sin modificar el contenido técnico del curso?</strong></p>
         </div>
         <div class="tr-findings">
-          <div class="trf"><div class="trf-label">fricción principal</div><div class="trf-text">El primer obstáculo no es técnico — es de identidad. "¿Soy el tipo de persona a quien esto le corresponde?"</div></div>
-          <div class="trf"><div class="trf-label">decisión de diseño</div><div class="trf-text">No rediseñar el curso — crear la ruta para el estudiante que el curso asumió que no existía.</div></div>
+          <div class="trf">
+            <div class="trf-label">fricción principal</div>
+            <div class="trf-text">El primer obstáculo no es técnico — es de identidad. "¿Soy el tipo de persona a quien
+              esto le corresponde?"</div>
+          </div>
+          <div class="trf">
+            <div class="trf-label">decisión de diseño</div>
+            <div class="trf-text">No rediseñar el curso — crear la ruta para el estudiante que el curso asumió que no
+              existía.</div>
+          </div>
         </div>
       </div>
     </div>
@@ -251,38 +983,82 @@
       </div>
 
       <div class="section">
-        <div class="eyebrow"><div class="eyebrow-line"></div><span class="eyebrow-text">pregunta 02 · diagnóstico</span></div>
+        <div class="eyebrow">
+          <div class="eyebrow-line"></div><span class="eyebrow-text">pregunta 02 · diagnóstico</span>
+        </div>
         <div class="s-title">¿Qué está bloqueando — y desde dónde lo explica la ciencia?</div>
-        <p class="s-body">Este estudiante llega con una pregunta existencial que nadie respondió bien: <strong>"¿Tiene esto algo que ver conmigo?"</strong> El bloqueo no es técnico — es de identidad. La teoría de Deci y Ryan lo explica: sin el componente de Conexión, el cerebro no tiene razón para sostener el esfuerzo atencional.</p>
+        <p class="s-body">Este estudiante llega con una pregunta existencial que nadie respondió bien: <strong>"¿Tiene
+            esto algo que ver conmigo?"</strong> El bloqueo no es técnico — es de identidad. La teoría de Deci y Ryan lo
+          explica: sin el componente de Conexión, el cerebro no tiene razón para sostener el esfuerzo atencional.</p>
       </div>
 
       <div class="section">
-        <div class="eyebrow"><div class="eyebrow-line"></div><span class="eyebrow-text">pregunta 04 · intervención · cinco módulos</span></div>
+        <div class="eyebrow">
+          <div class="eyebrow-line"></div><span class="eyebrow-text">pregunta 04 · intervención · cinco módulos</span>
+        </div>
         <div class="s-title">Una secuencia narrativa, no temática</div>
-        <p class="s-body" style="margin-bottom: 20px;">El estudiante no avanza por conceptos — avanza por comprensión. Cada módulo responde una pregunta real, en el orden en que aparece en su cabeza.</p>
+        <p class="s-body" style="margin-bottom: 20px;">El estudiante no avanza por conceptos — avanza por comprensión.
+          Cada módulo responde una pregunta real, en el orden en que aparece en su cabeza.</p>
         <div class="modules">
-          <div class="module"><div class="mod-num">módulo 0 <span class="mod-bloom">recordar</span></div><div class="mod-name">¿Desde dónde llegas tú?</div><div class="mod-q">"¿Dónde escuchaste Python?"</div><p class="mod-text">Sin contenido técnico. Solo activación de identidad. El curso personaliza su tono desde este momento.</p></div>
-          <div class="module"><div class="mod-num">módulo 1 <span class="mod-bloom">comprender + aplicar</span></div><div class="mod-name">¿Qué es esto y desde dónde lo uso?</div><div class="mod-q">"¿Necesito algo especial?"</div><p class="mod-text">Elimina el miedo al setup antes de que aparezca. Cero instalaciones, todo en el navegador.</p><div class="mod-wow">→ momento wow: de consola a página web en 3 líneas</div></div>
-          <div class="module"><div class="mod-num">módulo 2 <span class="mod-bloom">comprender</span></div><div class="mod-name">¿Por qué está en todas partes?</div><div class="mod-q">"¿Por qué sirve para cosas tan distintas?"</div><p class="mod-text">El mismo concepto en tres contextos distintos. Datos, automatización, IA. Para reconocer que Python no es un lenguaje de nicho.</p></div>
-          <div class="module"><div class="mod-num">módulo 3 <span class="mod-bloom">analizar</span></div><div class="mod-name">¿Tiene algo que ver conmigo?</div><div class="mod-q">"¿Aparece en lo que yo hago?"</div><p class="mod-text">El módulo más importante. El estudiante elige su área y ve un ejemplo concreto de Python en su contexto.</p><div class="mod-wow">→ responde la pregunta de identidad que nadie respondió</div></div>
+          <div class="module">
+            <div class="mod-num">módulo 0 <span class="mod-bloom">recordar</span></div>
+            <div class="mod-name">¿Desde dónde llegas tú?</div>
+            <div class="mod-q">"¿Dónde escuchaste Python?"</div>
+            <p class="mod-text">Sin contenido técnico. Solo activación de identidad. El curso personaliza su tono desde
+              este momento.</p>
+          </div>
+          <div class="module">
+            <div class="mod-num">módulo 1 <span class="mod-bloom">comprender + aplicar</span></div>
+            <div class="mod-name">¿Qué es esto y desde dónde lo uso?</div>
+            <div class="mod-q">"¿Necesito algo especial?"</div>
+            <p class="mod-text">Elimina el miedo al setup antes de que aparezca. Cero instalaciones, todo en el
+              navegador.</p>
+            <div class="mod-wow">→ momento wow: de consola a página web en 3 líneas</div>
+          </div>
+          <div class="module">
+            <div class="mod-num">módulo 2 <span class="mod-bloom">comprender</span></div>
+            <div class="mod-name">¿Por qué está en todas partes?</div>
+            <div class="mod-q">"¿Por qué sirve para cosas tan distintas?"</div>
+            <p class="mod-text">El mismo concepto en tres contextos distintos. Datos, automatización, IA. Para reconocer
+              que Python no es un lenguaje de nicho.</p>
+          </div>
+          <div class="module">
+            <div class="mod-num">módulo 3 <span class="mod-bloom">analizar</span></div>
+            <div class="mod-name">¿Tiene algo que ver conmigo?</div>
+            <div class="mod-q">"¿Aparece en lo que yo hago?"</div>
+            <p class="mod-text">El módulo más importante. El estudiante elige su área y ve un ejemplo concreto de Python
+              en su contexto.</p>
+            <div class="mod-wow">→ responde la pregunta de identidad que nadie respondió</div>
+          </div>
         </div>
       </div>
 
       <div class="section">
-        <div class="eyebrow"><div class="eyebrow-line"></div><span class="eyebrow-text">decisiones de diseño · lo que descarté</span></div>
+        <div class="eyebrow">
+          <div class="eyebrow-line"></div><span class="eyebrow-text">decisiones de diseño · lo que descarté</span>
+        </div>
         <div class="s-title">Lo que el curso original hacía — y por qué no funcionaba.</div>
         <div class="decisions">
           <div class="decision">
-            <div class="dec-no">Objetivos de sintaxis técnica</div><div class="dec-arr">→</div><div class="dec-yes">Objetivos de comprensión y confianza</div>
-            <div class="dec-reason">No se miden con exámenes — se miden con la capacidad de hablar con claridad sobre lo aprendido.</div>
+            <div class="dec-no">Objetivos de sintaxis técnica</div>
+            <div class="dec-arr">→</div>
+            <div class="dec-yes">Objetivos de comprensión y confianza</div>
+            <div class="dec-reason">No se miden con exámenes — se miden con la capacidad de hablar con claridad sobre lo
+              aprendido.</div>
           </div>
           <div class="decision">
-            <div class="dec-no">Comenzar con definición de programación</div><div class="dec-arr">→</div><div class="dec-yes">Comenzar con "¿dónde escuchaste Python?"</div>
-            <div class="dec-reason">Sin anclaje personal, el cerebro no tiene razón para sostener el esfuerzo atencional.</div>
+            <div class="dec-no">Comenzar con definición de programación</div>
+            <div class="dec-arr">→</div>
+            <div class="dec-yes">Comenzar con "¿dónde escuchaste Python?"</div>
+            <div class="dec-reason">Sin anclaje personal, el cerebro no tiene razón para sostener el esfuerzo
+              atencional.</div>
           </div>
           <div class="decision">
-            <div class="dec-no">Instalación de Python como primer paso</div><div class="dec-arr">→</div><div class="dec-yes">Replit en el navegador — cero fricción</div>
-            <div class="dec-reason">La fricción técnica inicial es el mayor riesgo de abandono cuando el bloqueo real es de identidad.</div>
+            <div class="dec-no">Instalación de Python como primer paso</div>
+            <div class="dec-arr">→</div>
+            <div class="dec-yes">Replit en el navegador — cero fricción</div>
+            <div class="dec-reason">La fricción técnica inicial es el mayor riesgo de abandono cuando el bloqueo real es
+              de identidad.</div>
           </div>
         </div>
       </div>
@@ -292,7 +1068,8 @@
 
   <div class="quote-band">
     <div class="wrap">
-      <div class="quote-text">"Este curso no enseña Python.<br>Responde la pregunta que <span>nadie respondió.</span>"</div>
+      <div class="quote-text">"Este curso no enseña Python.<br>Responde la pregunta que <span>nadie respondió.</span>"
+      </div>
       <div class="quote-attr">— nota de diseño · ruta curiosidad</div>
     </div>
   </div>
@@ -315,4 +1092,5 @@
   </footer>
 
 </body>
+
 </html>
